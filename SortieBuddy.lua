@@ -1,7 +1,7 @@
 _addon.name = 'SortieBuddy'
 _addon.author = 'Dabidobido'
-_addon.version = '1.0.0'
-_addon.commands = {'sortiebuddy'}
+_addon.version = '1.0.1'
+_addon.commands = {'sortiebuddy', 'srtb' }
 
 packets = require('packets')
 config = require('config')
@@ -55,7 +55,7 @@ settings = config.load(default_settings)
 text_box = texts.new(settings)
 
 function help_command()
-	notice("ping (target): ping the a/b/c/d NMs or f/g/h blitzer")
+	notice("ping (target): ping the a/b/c/d NMs or f/g/h bitzer")
 end
 
 windower.register_event('addon command', function (...)
@@ -118,7 +118,7 @@ windower.register_event("incoming chunk", function(id, data)
 			if indexes[current_target] == mob_index then
 				local mobx = packet['X']
 				local moby = packet['Y']
-				notice('got ' .. packet["Name"] .. " x: "  .. string.format("%.2f", mobx) .. " y: " .. string.format("%.2f", moby))
+				notice("got mob x: "  .. string.format("%.2f", mobx) .. " y: " .. string.format("%.2f", moby))
 				targets[mob_index] = { x = mobx, y = moby }
 				current_target = ""
 				text_box:visible(true)

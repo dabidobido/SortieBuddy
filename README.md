@@ -1,4 +1,4 @@
-#Sortie Buddy
+# Sortie Buddy
 
 Use at your own risk!
 
@@ -12,8 +12,12 @@ use //sortiebuddy to send commands
 
 ## //sortiebuddy ping (a, b, c, d, f, g or h)
 
-> Injects a target packet to target the blitzer/nm then shows distance and direction
+> Injects a target packet to target the bitzer/nm then shows distance and direction
 
 # Version History
+1.0.1:
+- Add shortcut //srtb
+- Don't use name from packet, sometimes it's crap
+
 1.0.0:
 - First version
