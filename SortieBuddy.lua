@@ -1,6 +1,6 @@
 _addon.name = 'SortieBuddy'
 _addon.author = 'Dabidobido'
-_addon.version = '1.0.1'
+_addon.version = '1.0.2'
 _addon.commands = {'sortiebuddy', 'srtb' }
 
 packets = require('packets')
@@ -81,7 +81,11 @@ windower.register_event('addon command', function (...)
 end)
 
 function get_distance(p1, p2)
-	return math.sqrt(math.pow(p1.x - p2.x, 2) + math.pow(p1.y - p2.y, 2))
+	if p1 and p2 then
+		return math.sqrt(math.pow(p1.x - p2.x, 2) + math.pow(p1.y - p2.y, 2))
+	else
+		return 0
+	end
 end
 
 function get_direction(p1, p2)
@@ -139,13 +143,18 @@ function reset()
 	zone_change("")
 end
 
+function on_load()
+	local info = windower.ffxi.get_info()
+	if info.logged_in then current_zone = info.zone end
+end
+
 windower.register_event('zone change', zone_change)
 windower.register_event('logout', reset)
 windower.register_event('login', reset)
+windower.register_event('load', on_load)
 
 windower.register_event('prerender', function()
 	if current_zone == 133 or test_mode then 
-		--update()
 		update_text() 
 	end
 end)
