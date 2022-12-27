@@ -4,17 +4,56 @@ Use at your own risk!
 
 # How to Use
 
-1. Use //sortiebuddy ping command after you zone into a, b, c, d, f, g or h.
+Default settings has the following info for Sortie:
+a = Abject Obdella
+b = Biune Porxie
+c = Cachaemic Bhoot
+d = Demisang Deleterious
+f = Diaphanous Bitzer #F
+g = Diaphanous Bitzer #G
+h = Diaphanous Bitzer #H
+
+1. In Sortie, use //sortiebuddy ping command after you zone into a, b, c, d, f, g or h.
+
+or 
+
+1. Target something (e.g Mireu)
+2. Use add command
+3. Next time the target doesn't spawn in the zone that you used the add command, use spawn command to force spawn the target
 
 # Commands
 
-use //sortiebuddy to send commands
+use //sortiebuddy or //srtb to send commands
 
-## //sortiebuddy ping (a, b, c, d, f, g or h)
+## //sortiebuddy ping (name)
 
-> Injects a target packet to target the bitzer/nm then shows distance and direction
+> Injects a target packet then shows distance and direction to target
+
+## //sortiebuddy spawn (name)
+
+> Injects a target packet only.
+
+## //sortiebuddy add (name)
+
+> Save a target in current zone to settings
+
+## //sortiebuddy remove (zone_id, name)
+
+> Remove a target in zone_id from settings
+
+## //sortiebuddy showinfo
+
+> Shows target info for current zone
+
+# Known Issues
+
+Injecting the target packet on certain targets might crash the game!!!
 
 # Version History
+1.1.0:
+- Moved configuration to settings
+- Added spawn, add, remove command.
+
 1.0.2:
 - Fix info not showing if loaded addon while in sortie
 - Fix nil error when zoning out
