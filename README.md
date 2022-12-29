@@ -50,6 +50,9 @@ use //sortiebuddy or //srtb to send commands
 Injecting the target packet on certain targets might crash the game!!!
 
 # Version History
+1.1.1:
+- Fix lua runtime error. Need to save keys as string, not number
+
 1.1.0:
 - Moved configuration to settings
 - Added spawn, add, remove command.

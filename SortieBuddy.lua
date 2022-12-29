@@ -1,6 +1,6 @@
 _addon.name = 'SortieBuddy'
 _addon.author = 'Dabidobido'
-_addon.version = '1.1.0'
+_addon.version = '1.1.1'
 _addon.commands = {'sortiebuddy', 'srtb' }
 
 packets = require('packets')
@@ -10,7 +10,7 @@ require('logger')
 
 targets = nil
 current_target = ""
-current_zone = 0
+current_zone = nil
 test_mode = false
 
 default_settings = {}
@@ -31,14 +31,14 @@ default_settings.bg.green = 109
 default_settings.bg.blue = 166
 
 default_settings.mobs = {}
-default_settings.mobs[133] = {} -- Sortie
-default_settings.mobs[133]["a"] = 144
-default_settings.mobs[133]["b"] = 223
-default_settings.mobs[133]["c"] = 285
-default_settings.mobs[133]["d"] = 373
-default_settings.mobs[133]["f"] = 837
-default_settings.mobs[133]["g"] = 838
-default_settings.mobs[133]["h"] = 839
+default_settings.mobs["133"] = {} -- Sortie
+default_settings.mobs["133"]["a"] = 144
+default_settings.mobs["133"]["b"] = 223
+default_settings.mobs["133"]["c"] = 285
+default_settings.mobs["133"]["d"] = 373
+default_settings.mobs["133"]["f"] = 837
+default_settings.mobs["133"]["g"] = 838
+default_settings.mobs["133"]["h"] = 839
 settings = config.load(default_settings)
 
 text_box = texts.new(settings)
@@ -65,7 +65,7 @@ windower.register_event('addon command', function (...)
 
 	if command == 'ping' then
 		if args[2] then
-			local zone = windower.ffxi.get_info().zone
+			local zone = tostring(windower.ffxi.get_info().zone)
 			if settings.mobs[zone] then
 				local arg2 = args[2]:lower()
 				if settings.mobs[zone][arg2] then
@@ -89,7 +89,7 @@ windower.register_event('addon command', function (...)
 			local player = windower.ffxi.get_player()
 			local arg2 = args[2]:lower()
 			if player.target_index then
-				local zone = windower.ffxi.get_info().zone
+				local zone = tostring(windower.ffxi.get_info().zone)
 				if not settings.mobs[zone] then settings.mobs[zone] = {} end
 				settings.mobs[zone][arg2] = player.target_index
 				settings:save()
@@ -103,28 +103,25 @@ windower.register_event('addon command', function (...)
 	elseif command == 'remove' then
 		if args[2] then
 			if args[3] then
-				local arg2 = tonumber(args[2])
-				if arg2 then
-					if settings.mobs[arg2] then
-						local arg3 = args[3]:lower()
-						if settings.mobs[arg2][arg3] then
-							settings.mobs[arg2][arg3] = nil
-							notice("Removing " .. arg3 .. " from settings for zone id" .. arg2)
-							local count = 0
-							for _,_ in pairs(settings.mobs[arg2]) do
-								count = count + 1
-							end
-							if count == 0 then
-								settings.mobs[arg2] = nil
-								notice("Removing zone id " .. arg2 .. " from settings")
-							end
-							settings:save()
-						else
-							notice("Error: Entry " .. arg3 .. " not found in settings for zone id " .. arg2)
+				if settings.mobs[args[2]] then
+					local arg3 = args[3]:lower()
+					if settings.mobs[args[2]][arg3] then
+						settings.mobs[args[2]][arg3] = nil
+						notice("Removing " .. arg3 .. " from settings for zone id " .. args[2])
+						local count = 0
+						for _,_ in pairs(settings.mobs[args[2]]) do
+							count = count + 1
 						end
+						if count == 0 then
+							settings.mobs[args[2]] = nil
+							notice("Removing zone id " .. args[2] .. " from settings")
+						end
+						settings:save()
 					else
-						notice("Error: Zone id " .. arg2 .. " not found in settings")
+						notice("Error: Entry " .. arg3 .. " not found in settings for zone id " .. args[2])
 					end
+				else
+					notice("Error: Zone id " .. args[2] .. " not found in settings")
 				end
 			else
 				notice("Error: Remove command needs a name for 3rd argument")
@@ -134,7 +131,7 @@ windower.register_event('addon command', function (...)
 		end
 	elseif command == 'spawn' and args[2] then
 		if args[2] then
-			local zone = windower.ffxi.get_info().zone
+			local zone = tostring(windower.ffxi.get_info().zone)
 			if settings.mobs[zone] then
 				local arg2 = args[2]:lower()
 				if settings.mobs[zone][arg2] then
@@ -151,7 +148,7 @@ windower.register_event('addon command', function (...)
 			notice("Error: Spawn command needs a name for 2nd argument")
 		end
 	elseif command == 'showinfo' then
-		local zone = windower.ffxi.get_info().zone
+		local zone = tostring(windower.ffxi.get_info().zone)
 		notice('Current zone is ' .. zone)
 		for name, index in pairs(settings.mobs[zone]) do
 			notice(name .. " = " .. index)
@@ -198,7 +195,7 @@ function update_text()
 end
 
 windower.register_event("incoming chunk", function(id, data)
-	if current_zone == 133 and current_target ~= "" then
+	if current_zone and current_target ~= "" then
 		if id == 0x0E then
 			local packet = packets.parse('incoming', data)
 			local mob_index = packet["Index"]
@@ -218,7 +215,7 @@ end)
 function zone_change(new, old)
 	targets = nil
 	current_target = ""
-	current_zone = new
+	current_zone = tostring(new)
 	text_box:visible(false) 
 end
 
@@ -227,7 +224,7 @@ function reset()
 end
 
 function on_load()
-	current_zone = windower.ffxi.get_info().zone
+	current_zone = tostring(windower.ffxi.get_info().zone)
 end
 
 windower.register_event('zone change', zone_change)
