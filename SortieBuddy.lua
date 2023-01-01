@@ -1,6 +1,6 @@
 _addon.name = 'SortieBuddy'
 _addon.author = 'Dabidobido'
-_addon.version = '1.1.1'
+_addon.version = '1.1.2'
 _addon.commands = {'sortiebuddy', 'srtb' }
 
 packets = require('packets')
@@ -136,7 +136,7 @@ windower.register_event('addon command', function (...)
 				local arg2 = args[2]:lower()
 				if settings.mobs[zone][arg2] then
 					local p = packets.new('outgoing', 0x016)
-					p["Target Index"] = settings.mobs[zone][current_target]
+					p["Target Index"] = settings.mobs[zone][arg2]
 					packets.inject(p)
 				else
 					notice("Error: No info for " .. arg2 .. " in zone " .. zone )
